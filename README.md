@@ -16,5 +16,9 @@
     "dialect": "mysql"
   }
 }
+<<<<<<< HEAD
 ```
 - Once you have config your db config as listed above, go to the src folder from your terminal and execute `npx sequelize db:create`
+=======
+```
+>>>>>>> 9b984ed29a9459186f546141d673abeabcc05b33

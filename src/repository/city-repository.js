@@ -13,8 +13,9 @@ class CityRepository {
         }
     }
 
-    async deleteCity({ cityId }) { // {id: cityId}
+    async deleteCity(cityId) { // {id: cityId}
         try {
+            console.log(cityId);
             await City.destroy({
                 where: {
                     id: cityId
@@ -36,13 +37,20 @@ class CityRepository {
         }
     }
 
-    async updateCity(cityId, { data }) {
+    async updateCity(cityId, data) {
         try {
-            const city = await City.update({ name: data }, {
-                where: {
-                  id: cityId
-                }
-            });
+            // The below approach also works but will not return updated object
+            // if we are using Pg then returning: true can be used, else not
+            // const city = await City.update(data, {
+            //     where: {
+            //       id: cityId
+            //     }
+            // });
+            // return city;
+            // for getting updated data in mysql we use the below approach
+            const city = await City.findByPk(cityId);
+            city.name = data.name;
+            await city.save();
             return city;
         } catch(error) {
             

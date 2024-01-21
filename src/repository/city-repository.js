@@ -37,6 +37,16 @@ class CityRepository {
         }
     }
 
+    async getAllCities() {
+        try {
+            const AllCities = await City.findAll();
+            return AllCities;
+        } catch (error) {
+            console.log("something went wrong in the repository layer");
+            throw{error};
+        }
+    }
+
     async updateCity(cityId, data) {
         try {
             // The below approach also works but will not return updated object
@@ -53,7 +63,8 @@ class CityRepository {
             await city.save();
             return city;
         } catch(error) {
-            
+            console.log("something went wrong in the repository layer");
+            throw{error};
         }
     }
 };

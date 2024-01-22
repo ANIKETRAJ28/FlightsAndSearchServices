@@ -14,7 +14,6 @@ module.exports = {
       },
       address: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       cityId: {
         type: Sequelize.INTEGER

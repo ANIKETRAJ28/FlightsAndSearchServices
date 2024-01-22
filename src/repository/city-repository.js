@@ -40,7 +40,7 @@ class CityRepository {
 
     async getAllCities(filter) { // filter can be empty also
         try {
-            if(filter.name) {
+            if(filter.name) { // if filter property is not undefined
                 const AllCities = await City.findAll({
                     where: {
                         name: {

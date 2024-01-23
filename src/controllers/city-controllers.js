@@ -108,4 +108,4 @@ module.exports = {
     destroy, // destroy: destroy
     get, // get: get
     getAll // getAll: getAll
-}
+};

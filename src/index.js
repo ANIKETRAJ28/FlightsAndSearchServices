@@ -3,7 +3,7 @@ const express = require("express");
 const {PORT} = require("./config/serverConfig");
 const bodyParser = require("body-parser");
 const ApiRoutes = require("./router/index");
-const {Airport, City} = require("./models/index");
+const {Airport, City, Airplane} = require("./models/index");
 const db = require("./models/index");
 
 const setupAndStartServer = async () => {
@@ -35,6 +35,9 @@ const setupAndStartServer = async () => {
         // });
         // const airports = await city.getAirports();
         // console.log(airports);
+        await Airplane.create({
+            modelNumber: "Bombardier CRJ"
+        })
     });
 }
 

@@ -3,4 +3,5 @@ module.exports = { // this will export all the repositories in the form of key-v
     AirportRepository: require("./airport-repository"),
     AirplaneRepository: require("./airplane-repository"),
     FlightRepository: require("./flight-repository"),
+    CrudRepository: require("./crud-repository")
 };

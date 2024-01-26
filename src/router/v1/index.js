@@ -9,10 +9,11 @@ router.get("/city/:id", CityController.get);
 router.get("/city", CityController.getAll);
 router.patch("/city/:id", CityController.update);
 
-router.get("/airport/:id", AirportController.get);
-router.get("/airport", AirportController.getAll);
-router.delete("/airport/:id", AirportController.destroy);
-router.patch("/airport/:id", AirportController.update);
+router.post("/airports", AirportController.create);
+router.get("/airports/:id", AirportController.get);
+router.get("/airports", AirportController.getAll);
+router.delete("/airports/:id", AirportController.destroy);
+router.patch("/airports/:id", AirportController.update);
 
 router.get("/airplane/:id", AirplaneController.get);
 router.post("/flights", FlightController.create);

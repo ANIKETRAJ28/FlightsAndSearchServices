@@ -5,14 +5,17 @@ class FlightRepository {
 
     // private are assigned by #
     #createFilter(data) {
-        let filter = {};
+        // let filter = {};
 
-        if(data.departureAirportId) {
-            filter.departureAirportId = data.departureAirportId;
-        }
-        if(data.arrivalAirportId) {
-            filter.arrivalAirportId = data.arrivalAirportId;
-        }
+        let filter = {...data};
+        let priceFilter = [];
+
+        // if(data.departureAirportId) {
+        //     filter.departureAirportId = data.departureAirportId;
+        // }
+        // if(data.arrivalAirportId) {
+        //     filter.arrivalAirportId = data.arrivalAirportId;
+        // }
 
         // if(data.minPrice && data.maxPrice) {
         //     // [Op.gte] Operator: greater than equal to
@@ -35,7 +38,7 @@ class FlightRepository {
         //         [Op.lte]: data.maxPrice
         //     });
         // }
-        let priceFilter = [];
+
         if(data.maxPrice) {
             priceFilter.push({price: {[Op.lte]: data.maxPrice}})
         }

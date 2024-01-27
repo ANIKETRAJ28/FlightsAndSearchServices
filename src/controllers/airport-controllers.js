@@ -111,13 +111,13 @@
 // };
 
 const { AirportService } = require('../services/index');
-
+const {SuccessError } = require("../utils/error-codes");
 const airportService = new AirportService();
 
 const create = async (req, res) => {
     try {
         const response = await airportService.create(req.body);
-        return res.status(201).json({
+        return res.status(SuccessError.CREATED).json({
             data: response,
             success: true,
             message: "Successfully fetched the data",
@@ -137,7 +137,7 @@ const create = async (req, res) => {
 const get = async (req, res) => {
     try {
         const response = await airportService.get(req.params.id);
-        return res.status(201).json({
+        return res.status(SuccessError.OK).json({
             data: response,
             success: true,
             message: "Successfully fetched the data",
@@ -157,7 +157,7 @@ const get = async (req, res) => {
 const update = async (req, res) => {
     try {
         const response = await airportService.update(req.params.id, req.body);
-        return res.status(201).json({
+        return res.status(SuccessError.CREATED).json({
             data: response,
             success: true,
             message: "Successfully updated the data",
@@ -177,7 +177,7 @@ const update = async (req, res) => {
 const getAll = async (req, res) => {
     try {
         const response = await airportService.getAll(req.query);
-        return res.status(201).json({
+        return res.status(SuccessError.OK).json({
             data: response,
             success: true,
             message: "Successfully fetched all the data",

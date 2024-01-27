@@ -5,9 +5,9 @@ class FlightRepository {
 
     // private are assigned by #
     #createFilter(data) {
-        // let filter = {};
+        let filter = {};
 
-        let filter = {...data};
+        // let filter = {...data};
         let priceFilter = [];
 
         // if(data.departureAirportId) {
@@ -46,7 +46,7 @@ class FlightRepository {
             priceFilter.push({price: {[Op.gte]: data.minPrice}})
         }
         Object.assign(filter, {[Op.and]: priceFilter});
-        // console.log(filter);
+        console.log(filter);
         return filter;
     }
     

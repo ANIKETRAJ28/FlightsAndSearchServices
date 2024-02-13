@@ -1,61 +1,5 @@
-// class CrudRepository {
-//     constructor(model) {
-//         this.model = model;
-//     }
-
-//     async create(data) {
-//         try {
-//             const response = await this.model.create(data);
-//             return response;
-//         } catch (error) {
-//             console.log("something went wrong in the crud-repository layer");
-//             throw{error};
-//         }
-//     }
-
-//     async get(data) {
-//         try {
-//             console.log("hello");
-//             const response = await this.model.findByPk(data);
-//             return response;
-//         } catch (error) {
-//             console.log("something went wrong in the crud-repository layer");
-//             throw{error};
-//         }
-//     }
-
-//     async getAll(data) {
-//         try {
-//             const response = await this.model.getAll(data);
-//             return response;
-//         } catch (error) {
-//             console.log("something went wrong in the crud-repository layer");
-//             throw{error};
-//         }
-//     }
-
-//     async destroy(data) {
-//         try {
-//             const response = await this.model.destroy(data);
-//             return response;
-//         } catch (error) {
-//             console.log("something went wrong in the crud-repository layer");
-//             throw{error};
-//         }
-//     }
-
-//     async update(data) {
-//         try {
-//             const response = await this.model.update(data);
-//             return response;
-//         } catch (error) {
-//             console.log("something went wrong in the crud-repository layer");
-//             throw{error};
-//         }
-//     }
-// }
-
-// module.exports = CrudRepository;
+const AppError = require("../utils/error-codes");
+const { StatusCodes } = require("http-status-codes");
 
 class CrudRepository {
     constructor(model) {
@@ -67,31 +11,48 @@ class CrudRepository {
             const result = await this.model.create(data);
             return result;
         } catch (error) {
-            console.log("Something went wrong in crus repo");
-            throw error;
+            console.log("Something went wrong in crud repo");
+            throw error
         }
     }
 
     async destroy(modelId) {
         try {
+            const res =
             await this.model.destroy({
                 where: {
                     id: modelId
                 }
             });
+            if(res == false) {
+                throw new AppError(
+                    "BAD REQUEST", 
+                    "Failed to delete the data",
+                    "Data not present",
+                    StatusCodes.NOT_FOUND
+                );
+            }
             return true;
         } catch (error) {
-            console.log("Something went wrong in crus repo");
+            console.log("Something went wrong in crud repo");
             throw error;
         }
     }
 
     async get(modelId) {
         try {
-            const result = await this.model.findByPk(modelId);
-            return result;
+            const response = await this.model.findByPk(modelId);
+            if(response == null) {
+                throw new AppError(
+                    "BAD REQUEST", 
+                    "Failed to get the data",
+                    "Data not present",
+                    StatusCodes.NOT_FOUND
+                );
+            }
+            return response;
         } catch (error) {
-            console.log("Something went wrong in crus repo");
+            console.log("Something went wrong in crud repo");
             throw error;
         }
     }
@@ -101,7 +62,7 @@ class CrudRepository {
             const result = await this.model.findAll();
             return result;
         } catch (error) {
-            console.log("Something went wrong in crus repo");
+            console.log("Something went wrong in crud repo");
             throw error;
         }
     }
@@ -116,7 +77,7 @@ class CrudRepository {
             });
             return result;
         } catch (error) {
-            console.log("Something went wrong in crus repo");
+            console.log("Something went wrong in crud repo");
             throw error;
         }
     }

@@ -1,19 +1,20 @@
 const { CityService } = require("../services/index");
-const {SuccessError } = require("../utils/error-codes");
+const StatusCodes = require("http-status-codes");
 const cityService = new CityService();
 
 const create = async(req, res) => {
     try {
-        const city = await cityService.create(req.body);
-        return res.status(SuccessError.CREATED).json({
+        const reqData = {};
+        reqData.name = req.body.name; 
+        const city = await cityService.create(reqData);
+        return res.status(StatusCodes.CREATED).json({
             data: city,
             success: true,
             message: "Successfully created a city",
             err: {}
         });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
+        return res.status(StatusCodes.BAD_REQUEST).json({
             data: {},
             success: false,
             message: "Failed to create a city",
@@ -24,16 +25,23 @@ const create = async(req, res) => {
 
 const destroy = async(req, res) => {
     try {
-        const response = await cityService.delete(req.params.id);
-        return res.status(SuccessError.OK).json({
+        const response = await cityService.destroy(req.params.id);
+        return res.status(StatusCodes.OK).json({
             data: response,
             success: true,
             message: "Successfully deleted the data",
             err: {}
         });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
+        if(error.name == "BAD REQUEST") {
+            return res.status(error.statusCode).json({
+                data: {},
+                success: false,
+                message: error.message,
+                explaination: error.explaination
+            });
+        }
+        return res.status(StatusCodes.BAD_REQUEST).json({
             data: {},
             success: false,
             message: "Failed to delete the data",
@@ -52,8 +60,7 @@ const update = async(req, res) => {
             err: {}
         });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
+        return res.status(StatusCodes.BAD_REQUEST).json({
             data: {},
             success: false,
             message: "Failed to update the data",
@@ -72,7 +79,14 @@ const get = async(req, res) => {
             err: {}
         });
     } catch (error) {
-        console.log(error);
+        if(error.name == "BAD REQUEST") {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                data: {},
+                success: false,
+                message: error.message,
+                explaination: error.explaination
+            });
+        }
         return res.status(500).json({
             data: {},
             success: false,

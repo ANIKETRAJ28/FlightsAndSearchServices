@@ -1,3 +1,5 @@
+const StatusCodes = require("http-status-codes");
+
 const validateCreateFlight = (req, res, next) => {
     if(
         !req.body.flightNumber ||
@@ -8,14 +10,29 @@ const validateCreateFlight = (req, res, next) => {
         !req.body.departureTime ||
         !req.body.price
     ) {
-        return res.status(400).json({
+        return res.status(StatusCodes.BAD_REQUEST).json({
             data: {},
             success: false,
-            message: "Invalid request body for create flights",
-            err: "Missing madatory properties to create a flight"
+            message: "Invalid request body for creating the flights",
+            explaination: "Missing madatory properties to create a flight"
         });
     }
     next();
 }
 
-module.exports = validateCreateFlight;
+const validateUpdateFlight = (req, res, next) => {
+    if(!req.body.price) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            data: {},
+            success: false,
+            message: "Invalid request body for updating the flights",
+            explaination: "Missing madatory properties to update a flight"
+        });
+    }
+    next();
+}
+
+module.exports = {
+    validateCreateFlight,
+    validateUpdateFlight
+}

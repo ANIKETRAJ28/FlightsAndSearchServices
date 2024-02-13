@@ -1,5 +1,5 @@
 const { FlightService } = require("../services/index");
-const {SuccessError } = require("../utils/error-codes");
+const { StatusCodes } = require("http-status-codes");
 const flightService = new FlightService();
 
 const create = async (req, res) => {
@@ -14,14 +14,14 @@ const create = async (req, res) => {
             price: req.body.price
         }
         const response = await flightService.createFlight(reqData);
-        return res.status(SuccessError.CREATED).json({
+        return res.status(StatusCodes.CREATED).json({
             data: response,
             success: true,
-            err: {},
-            message: "Successfully created a flight"
+            message: "Successfully created a flight",
+            err: {}
         });
     } catch (error) {
-        return res.status(500).json({
+        return res.status(StatusCodes.BAD_REQUEST).json({
             data: {},
             success: false,
             message: "Not able to create a flight",
@@ -32,15 +32,23 @@ const create = async (req, res) => {
 
 const get = async (req, res) => {
     try {
-        const response = await flightService.getFlight(req.params.id);
-        return res.status(SuccessError.OK).json({
+        const response = await flightService.get(req.params.id);
+        return res.status(StatusCodes.OK).json({
             data: response,
             success: true,
-            err: {},
-            message: "Successfully fetched the flight"
+            message: "Successfully fetched the flight",
+            err: {}
         });
     } catch (error) {
-        return res.status(500).json({
+        if(error.name == "Not Found") {
+            return res.status(error.statusCode).json({
+                data: {},
+                success: false,
+                message: error.message,
+                explaination: error.explaination
+            });
+        }
+        return res.status(StatusCodes.BAD_REQUEST).json({
             data: {},
             success: false,
             message: "Not able to get a flight",
@@ -51,18 +59,21 @@ const get = async (req, res) => {
 
 const getAll = async (req, res) => {
     try {
-        const response = await flightService.getAllFlight(req.query);
-        return res.status(SuccessError.OK).json({
+        const reqData = {};
+        if(req.query.maxPrice) reqData.maxPrice = req.query.maxPrice;
+        if(req.query.minPrice) reqData.minPrice = req.query.minPrice;
+        const response = await flightService.getAll(reqData);
+        return res.status(StatusCodes.OK).json({
             data: response,
             success: true,
-            err: {},
-            message: "Successfully fetched all the flight"
+            message: "Successfully fetched all the flight",
+            err: {}
         });
     } catch (error) {
-        return res.status(500).json({
+        return res.status(StatusCodes.BAD_REQUEST).json({
             data: {},
             success: false,
-            message: "Not able to get all flights",
+            message: "Not able to get a flight",
             error: error
         });
     }
@@ -70,15 +81,17 @@ const getAll = async (req, res) => {
 
 const update = async (req, res) => {
     try {
-        const response = await flightService.updateFlight(req.params.id, req.body);
-        return res.status(SuccessError.OK).json({
+        const reqData = {};
+        reqData.price = req.body.price;
+        const response = await flightService.update(req.params.id, reqData);
+        return res.status(StatusCodes.OK).json({
             data: response,
             success: true,
-            err: {},
-            message: "Successfully updated the flight"
+            message: "Successfully updated the flight",
+            err: {}
         });
     } catch (error) {
-        return res.status(500).json({
+        return res.status(StatusCodes.BAD_REQUEST).json({
             data: {},
             success: false,
             message: "Not able to updat a flight",

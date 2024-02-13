@@ -1,18 +1,10 @@
 const { AirplaneRepository } = require("../repository/index");
+const CrudService = require("./crud-service");
 
-class AirplaneService {
+class AirplaneService extends CrudService {
     constructor() {
-        this.airplaneRepository = new AirplaneRepository();
-    }
-
-    async getAirplane(id) {
-        try {
-            const response = await this.airplaneRepository.getAirplane(id);
-            return response;
-        } catch (error) {
-            console.log("Something went wrong in the service layer");
-            throw(error);
-        }
+        const airplaneRepository = new AirplaneRepository();
+        super(airplaneRepository);
     }
 }
 

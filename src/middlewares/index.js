@@ -1,3 +1,4 @@
 module.exports = {
-    validateCreateFlight: require("./flight-middlewares")
+    validationFlight: require("./flight-middlewares"),
+    validationCity: require("./city-middlewares")
 };

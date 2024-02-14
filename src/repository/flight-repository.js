@@ -7,7 +7,6 @@ class FlightRepository extends CrudRepository {
     // private are assigned by #
     #createFilter(data) {
         let filter = {};
-
         let priceFilter = [];
 
         if(data.maxPrice) {
@@ -17,7 +16,6 @@ class FlightRepository extends CrudRepository {
             priceFilter.push({price: {[Op.gte]: data.minPrice}})
         }
         Object.assign(filter, {[Op.and]: priceFilter});
-        console.log(filter);
         return filter;
     }
 
@@ -30,10 +28,18 @@ class FlightRepository extends CrudRepository {
             const flight = await Flights.findAll({
                 where: filterObject
             });
+            if(flight == false) {
+                throw new AppError(
+                    "BAD REQUEST", 
+                    "Failed to get all flights",
+                    "Flights not present",
+                    StatusCodes.NOT_FOUND
+                );
+            }
             return flight;
         } catch (error) {
             console.log("Something went wrong in the repository layer");
-            throw {error};
+            throw error;
         }
     }
 }

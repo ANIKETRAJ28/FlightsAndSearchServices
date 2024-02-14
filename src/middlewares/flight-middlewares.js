@@ -1,4 +1,4 @@
-const StatusCodes = require("http-status-codes");
+const { StatusCodes } = require("http-status-codes");
 
 const validateCreateFlight = (req, res, next) => {
     if(
@@ -32,7 +32,20 @@ const validateUpdateFlight = (req, res, next) => {
     next();
 }
 
+const validateGetAllFlight = (req, res, next) => {
+    if(req.query.maxPrice && req.query.minPrice && req.query.maxPrice < req.query.minPrice) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            data: {},
+            success: false,
+            message: "Invalid request body for fetching the flights",
+            explaination: "Maxprice is less than minprice"
+        });
+    }
+    next();
+}
+
 module.exports = {
     validateCreateFlight,
-    validateUpdateFlight
+    validateUpdateFlight,
+    validateGetAllFlight
 }

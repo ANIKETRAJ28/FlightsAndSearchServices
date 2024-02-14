@@ -1,4 +1,7 @@
+const { StatusCodes } = require("http-status-codes");
 const { FlightRepository, AirplaneRepository } = require("../repository/index");
+const AppError = require("../utils/error-codes");
+
 const { compareTime } = require("../utils/helper");
 
 class FlightService {
@@ -10,7 +13,12 @@ class FlightService {
     async create(data) {
         try {
             if(!compareTime(data.arrivalTime, data.departureTime)){
-                throw {error: "Departure time cannot be less than arrival time"};
+                throw new AppError(
+                    "BAD REQUEST", 
+                    "Failed to create a flight",
+                    "Flight arrival time is less than flight departure time",
+                    StatusCodes.BAD_REQUEST
+                );
             }
             const airplane = await this.airplaneRepository.get(data.airplaneId);
             const response = await this.flightRepository.create({

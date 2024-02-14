@@ -21,7 +21,15 @@ const create = async (req, res) => {
             err: {}
         });
     } catch (error) {
-        return res.status(StatusCodes.BAD_REQUEST).json({
+        if(error.name) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                data: {},
+                success: false,
+                message: error.message,
+                explaination: error.explaination
+            });
+        }
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             data: {},
             success: false,
             message: "Not able to create a flight",
@@ -40,15 +48,15 @@ const get = async (req, res) => {
             err: {}
         });
     } catch (error) {
-        if(error.name == "Not Found") {
-            return res.status(error.statusCode).json({
+        if(error.name) {
+            return res.status(StatusCodes.NOT_FOUND).json({
                 data: {},
                 success: false,
                 message: error.message,
                 explaination: error.explaination
             });
         }
-        return res.status(StatusCodes.BAD_REQUEST).json({
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             data: {},
             success: false,
             message: "Not able to get a flight",
@@ -70,7 +78,7 @@ const getAll = async (req, res) => {
             err: {}
         });
     } catch (error) {
-        return res.status(StatusCodes.BAD_REQUEST).json({
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             data: {},
             success: false,
             message: "Not able to get a flight",
@@ -91,7 +99,7 @@ const update = async (req, res) => {
             err: {}
         });
     } catch (error) {
-        return res.status(StatusCodes.BAD_REQUEST).json({
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             data: {},
             success: false,
             message: "Not able to updat a flight",

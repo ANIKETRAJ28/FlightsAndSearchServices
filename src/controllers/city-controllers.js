@@ -1,5 +1,5 @@
 const { CityService } = require("../services/index");
-const StatusCodes = require("http-status-codes");
+const { StatusCodes } = require("http-status-codes");
 const cityService = new CityService();
 
 const create = async(req, res) => {

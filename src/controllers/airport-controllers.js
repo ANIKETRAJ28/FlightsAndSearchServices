@@ -4,16 +4,17 @@ const airportService = new AirportService();
 
 const create = async (req, res) => {
     try {
-        const response = await airportService.create(req.body);
+        const reqData = {};
+        reqData.push(!req.body.name, req.body.address, req.body.cityId);
+        const response = await airportService.create(reqData);
         return res.status(StatusCodes.OK).json({
             data: response,
             success: true,
-            message: "Successfully fetched the data",
+            message: "Successfully created the flight",
             err: {}
         });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             data: {},
             success: false,
             message: "Failed to create the airport",
@@ -25,18 +26,17 @@ const create = async (req, res) => {
 const get = async (req, res) => {
     try {
         const response = await airportService.get(req.params.id);
-        return res.status(SuccessError.OK).json({
+        return res.status(StatusCodes.OK).json({
             data: response,
             success: true,
-            message: "Successfully fetched the data",
+            message: "Successfully fetched the airport",
             err: {}
         });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             data: {},
             success: false,
-            message: "Failed to fetch the data",
+            message: "Failed to fetch the airport",
             err: error
         });
     }
@@ -44,19 +44,29 @@ const get = async (req, res) => {
 
 const update = async (req, res) => {
     try {
-        const response = await airportService.update(req.params.id, req.body);
-        return res.status(SuccessError.CREATED).json({
+        const reqData = {};
+        reqData.name = req.body.name;
+        const response = await airportService.update(req.params.id, reqData);
+        return res.status(StatusCodes.OK).json({
             data: response,
             success: true,
-            message: "Successfully updated the data",
+            message: "Successfully updated the airport",
             err: {}
         });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
+        if(error.name) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                data: {},
+                success: false,
+                message: error.message,
+                explaination: error.explaination
+                
+            });
+        }
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             data: {},
             success: false,
-            message: "Failed to updated the data",
+            message: "Failed to updated the airport",
             err: error
         });
     }
@@ -64,19 +74,28 @@ const update = async (req, res) => {
 
 const getAll = async (req, res) => {
     try {
-        const response = await airportService.getAll(req.query);
-        return res.status(SuccessError.OK).json({
+        const reqData = {};
+        if(req.query.name) reqData.name = req.query.name;
+        const response = await airportService.getAll(reqData);
+        return res.status(StatusCodes.OK).json({
             data: response,
             success: true,
-            message: "Successfully fetched all the data",
+            message: "Successfully fetched all the airports",
             err: {}
         });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
+        if(error.name) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                data: {},
+                success: false,
+                message: error.message,
+                explaination: error.explaination
+            })
+        }
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             data: {},
             success: false,
-            message: "Failed to get all the data",
+            message: "Failed to get all the airports",
             err: error
         });
     }
@@ -84,19 +103,26 @@ const getAll = async (req, res) => {
 
 const destroy = async (req, res) => {
     try {
-        const response = await airportService.delete(req.params.id);
-        return res.status(201).json({
+        const response = await airportService.destroy(req.params.id);
+        return res.status(StatusCodes.OK).json({
             data: response,
             success: true,
-            message: "Successfully deleted the data",
+            message: "Successfully deleted the airport",
             err: {}
         });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
+        if(error.name) {
+            return res.status(error.statusCode).json({
+                data: {},
+                success: false,
+                message: error.message,
+                explaination: error.explaination
+            });
+        }
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             data: {},
             success: false,
-            message: "Failed to delete the data",
+            message: "Failed to delete the airport",
             err: error   
         });
     }

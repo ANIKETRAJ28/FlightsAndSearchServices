@@ -43,9 +43,9 @@ class CrudService {
         }
     }
 
-    async update(data) {
+    async update(id, data) {
         try {
-            const response = await this.repository.update(data);
+            const response = await this.repository.update(id, data);
             return response;
         } catch (error) {
             console.log("Something went wrong in the crud-service layer");

@@ -14,7 +14,7 @@ const create = async(req, res) => {
             err: {}
         });
     } catch (error) {
-        return res.status(StatusCodes.BAD_REQUEST).json({
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             data: {},
             success: false,
             message: "Failed to create a city",
@@ -29,11 +29,11 @@ const destroy = async(req, res) => {
         return res.status(StatusCodes.OK).json({
             data: response,
             success: true,
-            message: "Successfully deleted the data",
+            message: "Successfully deleted the city",
             err: {}
         });
     } catch (error) {
-        if(error.name == "BAD REQUEST") {
+        if(error.name) {
             return res.status(error.statusCode).json({
                 data: {},
                 success: false,
@@ -52,15 +52,26 @@ const destroy = async(req, res) => {
 
 const update = async(req, res) => {
     try {
-        const response = await cityService.update(req.params.id, req.body);
-        return res.status(SuccessError.CREATED).json({
+        const reqData = {};
+        reqData.name = req.body.name;
+        const response = await cityService.update(req.params.id, reqData);
+        return res.status(StatusCodes.OK).json({
             data: response,
             success: true,
             message: "Successfully updated the data",
             err: {}
         });
     } catch (error) {
-        return res.status(StatusCodes.BAD_REQUEST).json({
+        if(error.name) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                data: {},
+                success: false,
+                message: error.message,
+                explaination: error.explaination
+                
+            });
+        }
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             data: {},
             success: false,
             message: "Failed to update the data",
@@ -72,22 +83,22 @@ const update = async(req, res) => {
 const get = async(req, res) => {
     try {
         const response = await cityService.get(req.params.id);
-        return res.status(SuccessError.OK).json({
+        return res.status(StatusCodes.OK).json({
             data: response,
             success: true,
-            message: "Successfully fetched the data",
+            message: "Successfully fetched the city",
             err: {}
         });
     } catch (error) {
-        if(error.name == "BAD REQUEST") {
-            return res.status(StatusCodes.BAD_REQUEST).json({
+        if(error.name) {
+            return res.status(StatusCodes.NOT_FOUND).json({
                 data: {},
                 success: false,
                 message: error.message,
                 explaination: error.explaination
             });
         }
-        return res.status(500).json({
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             data: {},
             success: false,
             message: "Failed to fetch the data",
@@ -98,15 +109,24 @@ const get = async(req, res) => {
 
 const getAll = async(req, res) => {
     try {
-        const cities = await cityService.getAll(req.query);
-        return res.status(SuccessError.OK).json({
+        const reqData = {};
+        reqData.name = req.body.name;
+        const cities = await cityService.getAll(reqData);
+        return res.status(StatusCodes.OK).json({
             data: cities,
             success: true,
             message: "Successfully fetched all data",
             err: {}
         });
     } catch (error) {
-        console.log(error);
+        if(error.name) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                data: {},
+                success: false,
+                message: error.message,
+                explaination: error.explaination
+            })
+        }
         return res.status(500).json({
             data: {},
             success: false,

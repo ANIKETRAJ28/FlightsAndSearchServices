@@ -69,12 +69,17 @@ class CrudRepository {
 
     async update(modelId, data) {
         try {
-            const result = await this.model.update(data, {
-                where: {
-                    id: modelId
-                },
-                 
-            });
+            const result = await this.model.findByPk(modelId);
+            if(result == null) {
+                throw new AppError(
+                    "Not Found", 
+                    "Failed to get the data",
+                    "Data not present",
+                    StatusCodes.NOT_FOUND
+                );
+            }
+            result.name = data.name;
+            await result.save();
             return result;
         } catch (error) {
             console.log("Something went wrong in crud repo");

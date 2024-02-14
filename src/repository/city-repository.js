@@ -1,6 +1,7 @@
 const { City } = require("../models/index");
 const { Op } = require("sequelize");
 const CrudRepository = require("./crud-repository");
+const AppError = require("../utils/error-codes");
 
 class CityRepository extends CrudRepository {
     constructor() {
@@ -17,6 +18,13 @@ class CityRepository extends CrudRepository {
                         }
                     }
                 });
+                if(AllCities == false) {
+                    throw new AppError(
+                        "AppError",
+                        "Failed to get cities",
+                        "No city exists with the name",
+                    );
+                }
                 return AllCities;
             }
             const AllCities = await City.findAll();

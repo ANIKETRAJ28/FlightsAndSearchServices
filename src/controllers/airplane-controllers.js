@@ -1,20 +1,18 @@
 const {AirplaneService} = require("../services/index");
-const {SuccessError } = require("../utils/error-codes");
+const { StatusCodes } = require("http-status-codes");
 const airplaneService = new AirplaneService();
 
 const get = async(req, res) => {
     try {
-        console.log(req.params.id);
-        const response = await airplaneService.getAirplane(req.params.id);
-        return res.status(SuccessError.OK).json({
+        const response = await airplaneService.get(req.params.id);
+        return res.status(StatusCodes.OK).json({
             data: response,
             success: true,
             message: "Successfully fetched the data",
             err: {}
         });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             data: {},
             success: false,
             message: "Failed to fetch the data",

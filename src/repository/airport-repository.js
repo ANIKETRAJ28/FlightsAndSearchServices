@@ -1,6 +1,7 @@
 const CrudRespository = require('./crud-repository');
 const { Op } = require("sequelize");
 const { Airport } = require('../models/index');
+const AppError = require('../utils/error-codes');
 class AirportRespository extends CrudRespository {
     constructor() {
         super(Airport);
@@ -9,13 +10,20 @@ class AirportRespository extends CrudRespository {
     async getAll(filter) {
         try {
             if(filter.name) {
-                const airport = Airport.findAll({
+                const airport = await Airport.findAll({
                     where: {
                         name: {
                             [Op.startsWith] : filter.name
                         }
                     }
-                })
+                });
+                if(airport == false) {
+                    throw new AppError(
+                        "AppError",
+                        "Failed to get airports",
+                        "No airports exists with the name",
+                    );
+                }
                 return airport;
             }
             const airport = Airport.findAll();

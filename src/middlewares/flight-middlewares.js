@@ -20,18 +20,6 @@ const validateCreateFlight = (req, res, next) => {
     next();
 }
 
-const validateUpdateFlight = (req, res, next) => {
-    if(!req.body.price) {
-        return res.status(StatusCodes.BAD_REQUEST).json({
-            data: {},
-            success: false,
-            message: "Invalid request body for updating the flights",
-            explaination: "Missing madatory properties to update a flight"
-        });
-    }
-    next();
-}
-
 const validateGetAllFlight = (req, res, next) => {
     if(req.query.maxPrice && req.query.minPrice && req.query.maxPrice < req.query.minPrice) {
         return res.status(StatusCodes.BAD_REQUEST).json({
@@ -46,6 +34,5 @@ const validateGetAllFlight = (req, res, next) => {
 
 module.exports = {
     validateCreateFlight,
-    validateUpdateFlight,
     validateGetAllFlight
 }

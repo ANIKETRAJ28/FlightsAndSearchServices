@@ -90,7 +90,7 @@ const getAll = async (req, res) => {
 const update = async (req, res) => {
     try {
         const reqData = {};
-        reqData.price = req.body.price;
+        reqData.totalSeats = req.body.totalSeats;
         const response = await flightService.update(req.params.id, reqData);
         return res.status(StatusCodes.OK).json({
             data: response,

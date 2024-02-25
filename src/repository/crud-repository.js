@@ -78,7 +78,7 @@ class CrudRepository {
                     StatusCodes.NOT_FOUND
                 );
             }
-            result.name = data.name;
+            result.totalSeats = data.totalSeats;
             await result.save();
             return result;
         } catch (error) {
